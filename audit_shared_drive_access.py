@@ -13,6 +13,41 @@
 # Reports drive-level permissions only.
 # Does not expand group membership or scan files/folders.
 
+####################################################################################
+# REQUIREMENTS - INSTALL MISSING MODULES
+####################################################################################
+
+import importlib.util
+import subprocess
+import sys
+
+REQUIRED_PACKAGES = {
+    "googleapiclient": "google-api-python-client",
+    "google.auth": "google-auth",
+    "google_auth_httplib2": "google-auth-httplib2",
+    "google_auth_oauthlib": "google-auth-oauthlib",
+}
+
+for module, package in REQUIRED_PACKAGES.items():
+    try:
+        installed = importlib.util.find_spec(module) is not None
+    except ModuleNotFoundError:
+        installed = False
+
+    if not installed:
+        print(f"Installing missing package: {package}")
+
+        subprocess.check_call([
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            package
+        ])
+
+####################################################################################
+# IMPORT MODULES
+####################################################################################
 import csv
 from datetime import datetime
 from pathlib import Path
